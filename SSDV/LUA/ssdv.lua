@@ -9,13 +9,22 @@ call_func_ptr(0xffec84f0,fd)
 call_event_proc("SystemEventInit")
 
 
+function compare(a,b)
+  return a[1] < b[1]
+end
+
+
 imgid = 0
 --start infinite loop
 while true do
 
 print("start")
 
---take 3 photos
+--take 5 photos
+shoot()
+sleep(1000)
+shoot()
+sleep(1000)
 shoot()
 sleep(1000)
 shoot()
@@ -23,20 +32,28 @@ sleep(1000)
 shoot()
 maxsize = 0
 bestfile = ""
+list = {}
 
---Find the largest file of the last 3 photos
+--Find the largest file of the last 5 photos
 	dir = os.listdir("A/DCIM/101CANON", false) --'true' shows also . and ..
 	count = table.getn(dir)
 	x = 0
-	for i=count - 2, count do
-		if os.stat("A/DCIM/101CANON/"..dir[i])["size"] > maxsize then
-			maxsize = os.stat("A/DCIM/101CANON/"..dir[i])["size"]
-			bestfile = dir[i]
-		end
+	for i=count - 4, count do
+		--if os.stat("A/DCIM/101CANON/"..dir[i])["size"] > maxsize then
+		--	maxsize = os.stat("A/DCIM/101CANON/"..dir[i])["size"]
+		--	bestfile = dir[i]
+		--end
+		--Store each file name & size in list
+		list[x] = {dir[i],os.stat("A/DCIM/101CANON/"..dir[i])["size"]}
 		x = x + 1
 	end
 
+--sort list
+table.sort(list, compare)
 
+for k,v in pairs(list) do print(k,v) end
+
+sleep(5000)
 
 
 --open it
